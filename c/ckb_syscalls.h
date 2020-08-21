@@ -1,6 +1,10 @@
 #ifndef CKB_SYSCALLS_H_
 #define CKB_SYSCALLS_H_
 
+#if defined(USE_SIM)
+    #include "ckb_syscall_sim.h"
+    #include "ckb_consts.h"
+#else
 #include <stddef.h>
 #include <stdint.h>
 
@@ -160,5 +164,5 @@ int load_actual_type_witness(uint8_t *buf, uint64_t *len, size_t index,
 
   return ckb_load_witness(buf, len, 0, index, *type_source);
 }
-
+#endif
 #endif /* CKB_SYSCALLS_H_ */
