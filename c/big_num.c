@@ -246,7 +246,6 @@ tu_int __udivti3(tu_int a, tu_int b) {
 //===----------------------------------------------------------------------===//
 
 #define COMPUTE_UDIV(a, b) __udivmodti4((a), (b), (tu_int *)0)
-
 static __inline ti_int __divXi3(ti_int a, ti_int b) {
   const int N = (int)(sizeof(ti_int) * CHAR_BIT) - 1;
   ti_int s_a = a >> N;                            // s_a = a < 0 ? -1 : 0
@@ -310,6 +309,7 @@ static ti_int __mulddi3(du_int a, du_int b) {
 // Returns: a * b
 
 // COMPILER_RT_ABI
+/*
 ti_int __multi3(ti_int a, ti_int b) {
   twords x;
   x.all = a;
@@ -320,3 +320,6 @@ ti_int __multi3(ti_int a, ti_int b) {
   r.s.high += x.s.high * y.s.low + x.s.low * y.s.high;
   return r.all;
 }
+
+*/
+
