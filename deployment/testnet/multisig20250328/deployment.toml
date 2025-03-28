@@ -1,0 +1,21 @@
+# this is a new deployment of dep_cell, not on-chain script
+[[cells]]
+name = "multisig"
+enable_type_id = true
+location = { tx_hash = "0x732857f7ce93ee4d1ea1c6bd540002d12783bf05525b9ff0370d53f018b68685", index = 0 }
+
+# reference to on-chain cells, this config is referenced by dep_groups.cells
+[[cells]]
+name = "secp256k1_data"
+enable_type_id = false
+location = { tx_hash = "0x8f8c79eb6671709633fe6a46de93c0fedc9c1b8a6527a18d3983879542635c9f", index = 3 }
+
+# Dep group cells
+[[dep_groups]]
+name = "multisig_dep_group"
+cells = [ "multisig", "secp256k1_data" ]
+
+[lock]
+code_hash = "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8"
+args = "0x9c26427b733e19f774e74312382946db9548093a"
+hash_type = "type"
