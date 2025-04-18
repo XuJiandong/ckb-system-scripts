@@ -1,0 +1,20 @@
+[[cells]]
+name = "multisig"
+enable_type_id = false
+location = { file = "../../../specs/cells/secp256k1_blake160_multisig_all" }
+
+# reference to on-chain cells, this config is referenced by dep_groups.cells
+[[cells]]
+name = "seck256k1_data"
+enable_type_id = false
+location = { tx_hash = "0xe2fb199810d49a4d8beec56718ba2593b665db9d52299a0f9e6e75416d73ff5c", index = 3 }
+
+# Dep group cells
+[[dep_groups]]
+name = "multisig_dep_group"
+cells = [ "multisig", "seck256k1_data" ]
+
+[lock]
+code_hash = "0x0000000000000000000000000000000000000000000000000000000000000000"
+args = "0x"
+hash_type = "data"
