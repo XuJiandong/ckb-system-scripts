@@ -1,7 +1,7 @@
-CC := clang-16
-LD := ld.lld-16
-OBJCOPY := llvm-objcopy-16
-AR := llvm-ar-16
+CC := clang-20
+LD := ld.lld-20
+OBJCOPY := llvm-objcopy-20
+AR := llvm-ar-20
 
 # LD_SCRIPT := -T c/ld_interface.ld
 
@@ -89,8 +89,6 @@ clean:
 	rm -rf build/secp256k1_data_info.h build/dump_secp256k1_data
 	rm -rf specs/cells/secp256k1_data
 	rm -rf build/*.debug
-	cd deps/secp256k1 && [ -f "Makefile" ] && make clean
-	cargo clean
 
 dist: clean all
 

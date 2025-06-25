@@ -264,32 +264,32 @@ fn run_benchmark(t: SigHashAllBinType) -> u64 {
 #[test]
 fn test_sighash_benchmark() {
     run_benchmark(SigHashAllBinType::Def);
-    let c_16 = run_benchmark(SigHashAllBinType::LLVM16);
-    let c_17 = run_benchmark(SigHashAllBinType::LLVM17);
     let c_18 = run_benchmark(SigHashAllBinType::LLVM18);
-
-    println!(
-        "-- LLVM 16 cycles: {}({:.2}k), size: {}({:.2}k)",
-        c_16,
-        c_16 as f64 / 1024.0,
-        SigHashAllBinType::LLVM16.get_bin().len(),
-        SigHashAllBinType::LLVM16.get_bin().len() as f64 / 1024.0
-    );
-
-    println!(
-        "-- LLVM 17 cycles: {}({:.2}k), size: {}({:.2}k)",
-        c_17,
-        c_17 as f64 / 1024.0,
-        SigHashAllBinType::LLVM17.get_bin().len(),
-        SigHashAllBinType::LLVM17.get_bin().len() as f64 / 1024.0
-    );
+    let c_19 = run_benchmark(SigHashAllBinType::LLVM19);
+    let c_20 = run_benchmark(SigHashAllBinType::LLVM20);
 
     println!(
         "-- LLVM 18 cycles: {}({:.2}k), size: {}({:.2}k)",
         c_18,
         c_18 as f64 / 1024.0,
         SigHashAllBinType::LLVM18.get_bin().len(),
-        SigHashAllBinType::LLVM18.get_bin().len() as f64 / 1024.0,
+        SigHashAllBinType::LLVM18.get_bin().len() as f64 / 1024.0
+    );
+
+    println!(
+        "-- LLVM 19 cycles: {}({:.2}k), size: {}({:.2}k)",
+        c_19,
+        c_19 as f64 / 1024.0,
+        SigHashAllBinType::LLVM19.get_bin().len(),
+        SigHashAllBinType::LLVM19.get_bin().len() as f64 / 1024.0
+    );
+
+    println!(
+        "-- LLVM 20 cycles: {}({:.2}k), size: {}({:.2}k)",
+        c_20,
+        c_20 as f64 / 1024.0,
+        SigHashAllBinType::LLVM20.get_bin().len(),
+        SigHashAllBinType::LLVM20.get_bin().len() as f64 / 1024.0,
     );
 }
 

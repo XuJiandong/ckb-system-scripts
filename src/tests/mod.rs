@@ -29,25 +29,25 @@ lazy_static! {
 
 #[cfg(feature = "test_llvm_version")]
 lazy_static! {
-    pub static ref SIGHASH_ALL_BIN_LLVM_16: Bytes = Bytes::from(
-        &include_bytes!("../../specs/cells/secp256k1_blake160_sighash_all_llvm_16")[..]
-    );
-    pub static ref SIGHASH_ALL_BIN_LLVM_17: Bytes = Bytes::from(
-        &include_bytes!("../../specs/cells/secp256k1_blake160_sighash_all_llvm_17")[..]
-    );
     pub static ref SIGHASH_ALL_BIN_LLVM_18: Bytes = Bytes::from(
         &include_bytes!("../../specs/cells/secp256k1_blake160_sighash_all_llvm_18")[..]
+    );
+    pub static ref SIGHASH_ALL_BIN_LLVM_19: Bytes = Bytes::from(
+        &include_bytes!("../../specs/cells/secp256k1_blake160_sighash_all_llvm_19")[..]
+    );
+    pub static ref SIGHASH_ALL_BIN_LLVM_20: Bytes = Bytes::from(
+        &include_bytes!("../../specs/cells/secp256k1_blake160_sighash_all_llvm_20")[..]
     );
 }
 
 pub enum SigHashAllBinType {
     Def,
     #[cfg(feature = "test_llvm_version")]
-    LLVM16,
-    #[cfg(feature = "test_llvm_version")]
-    LLVM17,
-    #[cfg(feature = "test_llvm_version")]
     LLVM18,
+    #[cfg(feature = "test_llvm_version")]
+    LLVM19,
+    #[cfg(feature = "test_llvm_version")]
+    LLVM20,
 }
 
 impl SigHashAllBinType {
@@ -55,11 +55,11 @@ impl SigHashAllBinType {
         match self {
             Self::Def => &SIGHASH_ALL_BIN,
             #[cfg(feature = "test_llvm_version")]
-            Self::LLVM16 => &SIGHASH_ALL_BIN_LLVM_16,
-            #[cfg(feature = "test_llvm_version")]
-            Self::LLVM17 => &SIGHASH_ALL_BIN_LLVM_17,
-            #[cfg(feature = "test_llvm_version")]
             Self::LLVM18 => &SIGHASH_ALL_BIN_LLVM_18,
+            #[cfg(feature = "test_llvm_version")]
+            Self::LLVM19 => &SIGHASH_ALL_BIN_LLVM_19,
+            #[cfg(feature = "test_llvm_version")]
+            Self::LLVM20 => &SIGHASH_ALL_BIN_LLVM_20,
         }
     }
 }
