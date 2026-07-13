@@ -16,6 +16,7 @@ use ckb_types::{
     prelude::*,
 };
 use rand::{thread_rng, Rng};
+use std::sync::{Arc, Mutex};
 
 const ERROR_SYSCALL: i8 = -4;
 const ERROR_INVALID_WITHDRAW_BLOCK: i8 = -14;
@@ -1813,4 +1814,102 @@ fn test_dao_all_dao_actions() {
 
     let verify_result = TransactionScriptsVerifier::new(&rtx, &data_loader).verify(MAX_CYCLES);
     verify_result.expect("pass verification");
+}
+
+#[test]
+fn test_dao_printf_index_32() {
+    let mut data_loader = DummyDataLoader::new();
+    let (privkey, lock_args) = gen_lock();
+
+    let (deposit_header, deposit_epoch) = gen_header(1554, 10000000, 35, 1000, 1000);
+
+    data_loader
+        .headers
+        .insert(deposit_header.hash(), deposit_header.clone());
+    data_loader
+        .epoches
+        .insert(deposit_header.hash(), deposit_epoch);
+
+    let normal_capacity = Capacity::shannons(100_00000000);
+    let dao_capacity = Capacity::shannons(123456780000);
+
+    let mut resolved_inputs = vec![];
+    let mut builder = TransactionBuilder::default();
+
+    for _ in 0..32 {
+        let (cell, out_point) =
+            gen_normal_cell(&mut data_loader, normal_capacity, lock_args.clone());
+        let cell_meta = CellMetaBuilder::from_cell_output(cell, Bytes::new())
+            .out_point(out_point.clone())
+            .transaction_info(TransactionInfo {
+                block_hash: deposit_header.hash(),
+                block_number: deposit_header.number(),
+                block_epoch: EpochNumberWithFraction::new(35, 554, 1000),
+                index: 0,
+            })
+            .build();
+        resolved_inputs.push(cell_meta);
+        builder = builder
+            .input(CellInput::new(out_point, 0))
+            .output(cell_output_with_only_capacity(100_00000000))
+            .output_data(Bytes::new().pack());
+    }
+
+    let (dao_cell, dao_out_point) =
+        gen_dao_cell(&mut data_loader, dao_capacity, lock_args.clone());
+    let dao_cell_meta = CellMetaBuilder::from_cell_output(dao_cell, Bytes::from(&[0; 8][..]))
+        .out_point(dao_out_point.clone())
+        .transaction_info(TransactionInfo {
+            block_hash: deposit_header.hash(),
+            block_number: deposit_header.number(),
+            block_epoch: EpochNumberWithFraction::new(35, 554, 1000),
+            index: 0,
+        })
+        .build();
+    resolved_inputs.push(dao_cell_meta);
+
+    let (dao_output, _) = gen_dao_cell(&mut data_loader, dao_capacity, lock_args);
+    let mut deposit_block_number_bytes = [0; 8];
+    LittleEndian::write_u64(&mut deposit_block_number_bytes, 1554);
+
+    builder = builder
+        .input(CellInput::new(dao_out_point, 0))
+        .output(dao_output)
+        .output_data(Bytes::from(&deposit_block_number_bytes[..]).pack())
+        .header_dep(deposit_header.hash());
+
+    let witness = WitnessArgs::new_builder().build();
+    for _ in 0..33 {
+        builder = builder.witness(witness.as_bytes().pack());
+    }
+
+    let mut resolved_cell_deps = vec![];
+    let (tx, mut resolved_cell_deps2) = complete_tx(&mut data_loader, builder);
+    let tx = sign_tx(tx, &privkey);
+    for dep in resolved_cell_deps2.drain(..) {
+        resolved_cell_deps.push(dep);
+    }
+    let rtx = ResolvedTransaction {
+        transaction: tx,
+        resolved_inputs,
+        resolved_cell_deps,
+        resolved_dep_groups: vec![],
+    };
+
+    let prints = Arc::new(Mutex::new(Vec::new()));
+    let prints_clone = Arc::clone(&prints);
+    let mut verifier = TransactionScriptsVerifier::new(&rtx, &data_loader);
+    verifier.set_debug_printer(move |_script_hash: &Byte32, message: &str| {
+        prints_clone.lock().unwrap().push(message.to_string());
+    });
+    let verify_result = verifier.verify(MAX_CYCLES);
+    verify_result.expect("pass verification");
+
+    let captured = prints.lock().unwrap();
+    let index_32_found = captured.iter().any(|msg| msg.contains("index = 32"));
+    assert!(
+        index_32_found,
+        "expected printf(\"index = 32\") to be called, got: {:?}",
+        *captured
+    );
 }
