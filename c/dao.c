@@ -531,6 +531,7 @@ int main() {
         // 64, which will trigger an error. Hence we don't need to check for
         // overflows for `1 << index` operation.
         output_withdrawing_mask |= (1 << index);
+        printf("index = %ld", index);
         // Like any serious smart contracts, we will perform overflow checks here.
         if (__builtin_uaddl_overflow(input_capacities, capacity,
                                      &input_capacities)) {
@@ -589,6 +590,7 @@ int main() {
       // For newly deposited cells, we need to validate that the cell data part
       // contains 8 bytes of data filled with 0.
       if ((output_withdrawing_mask & (1 << index)) == 0) {
+        printf("hit, index = %ld", index);
         uint64_t block_number = 0;
         len = 8;
         ret = ckb_load_cell_data((unsigned char *)&block_number, &len, 0, index,
