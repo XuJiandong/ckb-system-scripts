@@ -1,0 +1,25 @@
+[package]
+name = "ckb-system-scripts-contract"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "system_scripts"
+path = "src/lib.rs"
+
+[[bin]]
+name = "secp256k1_blake160_sighash_all"
+path = "src/bin/secp256k1_blake160_sighash_all.rs"
+
+[[bin]]
+name = "secp256k1_blake160_multisig_all"
+path = "src/bin/secp256k1_blake160_multisig_all.rs"
+
+[[bin]]
+name = "dao"
+path = "src/bin/dao.rs"
+
+[dependencies]
+ckb-std = { version = "1.1.0", default-features = false, features = ["ckb-types", "allocator"] }
+ckb-hash = { version = "1.1.0", default-features = false, features = ["ckb-contract"] }
+k256 = { version = "0.14.0", default-features = false, features = ["ecdsa"] }

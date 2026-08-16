@@ -410,7 +410,7 @@ fn test_super_long_witness() {
 fn test_sighash_all_2_in_2_out_cycles() {
     // Notice this is changed due to the fact that the old tests uses
     // a different definition of WitnessArgs, hence triggering the differences.
-    const CONSUME_CYCLES: u64 = 3426207;
+    const CONSUME_CYCLES: u64 = 5002228;
 
     let mut data_loader = DummyDataLoader::new();
     let mut generator = Generator::non_crypto_safe_prng(42);
